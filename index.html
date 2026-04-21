@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Formulario con Suma</title>
+  <!-- Librería para generar .xlsx -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script>
+    function sumar() {
+      const num1 = parseFloat(document.getElementById("numero1").value) || 0;
+      const num2 = parseFloat(document.getElementById("numero2").value) || 0;
+      document.getElementById("resultado").value = num1 + num2;
+    }
+
+    function guardar() {
+      // OJO: ahora tomamos el id correcto "cliente"
+      const cliente = document.getElementById("cliente").value || "Sin nombre";
+      const materiales = document.getElementById("numero1").value || 0;
+      const extras = document.getElementById("numero2").value || 0;
+      const total = document.getElementById("resultado").value || 0;
+
+      const datos = [
+        ["Cliente", "Materiales", "Extras", "Total"],
+        [cliente, materiales, extras, total]
+      ];
+
+      const ws = XLSX.utils.aoa_to_sheet(datos);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Datos");
+      XLSX.writeFile(wb, "datos.xlsx");
+    }
+  </script>
+  <style>
+    .fila-inline { display: inline-flex; align-items: center; gap: .5rem; }
+    label { font-weight: 600; }
+    input[disabled] { background: #f5f5f5; }
+  </style>
+</head>
+<body>
+  <h1>Universidad HTML</h1>
+
+  <h2>Suma de números</h2>
+
+  <label for="cliente">Cliente:</label><br/>
+  <input id="cliente" placeholder="Nombre del cliente" />
+  <br/><br/>
+
+  <label for="numero1">Materiales:</label><br/>
+  <input type="number" id="numero1" placeholder="Ingrese un número" step="0.01" oninput="sumar()"/>
+  <br/><br/>
+
+  <label for="numero2">Extras:</label><br/>
+  <input type="number" id="numero2" placeholder="Ingrese otro número" step="0.01" oninput="guardar()"/>
+  <br/><br/>
+
+  <label for="resultado">Total:</label><br/>
+  <div class="fila-inline">
+    <input type="text" id="resultado" placeholder="Resultado" disabled/>
+    <button type="button" onclick="guardar()">Guardar</button>
+  </div>
+</body>
+</html>
